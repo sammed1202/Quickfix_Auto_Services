@@ -1,0 +1,54 @@
+{
+  "name": "myclient",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@tanstack/react-table": "^8.21.3",
+    "aos": "^2.3.4",
+    "axios": "^1.8.2",
+    "bootstrap": "^5.3.3",
+    "cra-template": "1.2.0",
+    "framer-motion": "^12.23.6",
+    "gsap": "^3.12.7",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "leaflet": "^1.9.4",
+    "react": "^19.0.0",
+    "react-bootstrap": "^2.10.9",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-leaflet": "^5.0.0",
+    "react-parallax-tilt": "^1.7.286",
+    "react-router-dom": "^7.1.5",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.1.19",
+    "universal-cookie": "^8.0.1",
+    "web-vitals": "^4.2.4"
+  },
+  "scripts": {
+    "letmyspace": "react-scripts start",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

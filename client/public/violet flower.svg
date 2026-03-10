@@ -1,0 +1,30 @@
+ai definition
+ai problem
+-ordinary problem
+	.speech
+	.understanding
+	.translation
+-formal task
+	.chess play
+	.solving resoning
+-expert task
+	.scintific analysis
+	.medical analysis
+
+
+underlying assumption
+it is about a problem of symbols in expressions
+explain chess problem where pieces are the symbol and the expressions are the positions.
+it should perform a best move from n moves.
+
+
+AI technique
+is method of using knowledge to solve a problem
+it can be reused in different fields
+REPRESENTATION: knowledge is stored in a way that the machine can understand(eg. using logic , using graphs,rules etc)
+SEARCH : it uses algorithm to find solutions
+MODULARITY: the technique should work across multiple domains not tied to just one
+give TIC TAC TOE game example
+program in such a way that most time the computer should win
+A board contains 1-9 places to win place an element in horizontal or vertical or diagonal
+ 

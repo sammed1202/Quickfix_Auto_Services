@@ -1,4 +1,4 @@
-import ShopService from "../models/shopServiceModel.js";
+import ShopService from "../models/ShopServiceModel.js";
 
 // Create or update shop
 export const createOrUpdateShop = async (req, res) => {

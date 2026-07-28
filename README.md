@@ -274,17 +274,17 @@ The project focuses on:
 
 ## 📸 Screenshots
 
-Screenshots of the application will be added here.
+Screenshots of project.....
 
 >## 📸 Screenshots
 
 ### Home Page
 
-![QuickFix Auto Home Page](./screenshots/home.png)
+![QuickFix Auto Home Page](./screenshots/Home.png)
 
 ### Register
 
-![QuickFix Auto Register Page](./screenshots/register.png)
+![QuickFix Auto Register Page](./screenshots/Register.png)
 
 ### Login
 
@@ -292,19 +292,19 @@ Screenshots of the application will be added here.
 
 ### Login
 
-![QuickFix Auto Contact](./screenshots/contact.png)
+![QuickFix Auto Contact](./screenshots/Contact.png)
 
 ### Booking
 
-![QuickFix Auto Booking](./screenshots/booking.png)
+![QuickFix Auto Booking](./screenshots/Booking.png)
 
 ### Payment Getway
 
-![QuickFix Auto Payment Getway](./screenshots/paymentpage.png)
+![QuickFix Auto Payment Getway](./screenshots/Paymentpage.png)
 
 ### User Dashboard
 
-![QuickFix Auto Dashboard](./screenshots/dashboard.png)
+![QuickFix Auto Dashboard](./screenshots/Dashboard.png)
 
 ### Admin Dashboard
 

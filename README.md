@@ -276,7 +276,39 @@ The project focuses on:
 
 Screenshots of the application will be added here.
 
-> Add screenshots of the most important pages such as the home page, services, booking flow, login/register, user dashboard, and admin dashboard.
+>## 📸 Screenshots
+
+### Home Page
+
+![QuickFix Auto Home Page](./screenshots/home.png)
+
+### Register
+
+![QuickFix Auto Register Page](./screenshots/register.png)
+
+### Login
+
+![QuickFix Auto Login Page](./screenshots/Login.png)
+
+### Login
+
+![QuickFix Auto Contact](./screenshots/contact.png)
+
+### Booking
+
+![QuickFix Auto Booking](./screenshots/booking.png)
+
+### Payment Getway
+
+![QuickFix Auto Payment Getway](./screenshots/paymentpage.png)
+
+### User Dashboard
+
+![QuickFix Auto Dashboard](./screenshots/dashboard.png)
+
+### Admin Dashboard
+
+![QuickFix Auto Admin Dashboard](./screenshots/admin-dashboard.png)
 
 ## 🌐 Live Demo
 

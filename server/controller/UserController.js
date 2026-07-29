@@ -113,7 +113,7 @@ export const emailVerification = async (req, res) => {
   try {
     const { email } = req.body;
     const verificationCode = Math.floor(
-      100000 + Math.random() * 900000
+      100000 + Math.random() * 900000,
     ).toString();
     verificationCodes[email] = verificationCode;
     console.log(email);
@@ -127,25 +127,23 @@ export const emailVerification = async (req, res) => {
 
 export const verifyEmail = async (email, verificationCode) => {
   try {
-
     console.log("EMAIL:", process.env.EMAIL);
     console.log("EMAIL_PASSWORD exists:", !!process.env.EMAIL_PASSWORD);
-
     const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
-    await transporter.verify();
-
-    console.log("SMTP Connected Successfully");
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
+    });
+    console.log("Trying to connect to SMTP...");
+await transporter.verify();
+console.log("SMTP Connected Successfully");
 
     const mailOptions = {
       from: process.env.EMAIL,
@@ -253,7 +251,7 @@ export const loginUser = async (req, res) => {
     }
 
     // ✅ Optional: update active status
-      await User.findByIdAndUpdate(user._id, { userStatus: "Active" });
+    await User.findByIdAndUpdate(user._id, { userStatus: "Active" });
 
     const token = generateToken(user._id);
 
@@ -277,9 +275,11 @@ export const loginUser = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword,confirmPassword } = req.body;
-    if(newPassword!==confirmPassword){
-      return res.status(450).json({message:"new password and confirm password didnt match"});
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(450)
+        .json({ message: "new password and confirm password didnt match" });
     }
     if (!oldPassword || !newPassword) {
       return res.status(400).json({ message: "All fields are required" });
@@ -308,7 +308,6 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -379,16 +378,19 @@ export const logoutUser = async (req, res) => {
       await user.save();
     } catch (saveError) {
       console.error("❌ Error while saving user:", saveError);
-      return res.status(500).json({ message: "Failed to save user", error: saveError.message });
+      return res
+        .status(500)
+        .json({ message: "Failed to save user", error: saveError.message });
     }
 
-    res.status(200).json({ message: "User logged out", status: user.userStatus });
+    res
+      .status(200)
+      .json({ message: "User logged out", status: user.userStatus });
   } catch (error) {
     console.error("❌ Outer error in logout:", error);
     res.status(500).json({ message: "Logout failed", error: error.message });
   }
 };
-
 
 export const spamChecker = async (req, res) => {
   try {
@@ -399,9 +401,6 @@ export const spamChecker = async (req, res) => {
     res.status(500).json({ message: "error in checking spam" });
   }
 };
-
-
-
 
 export const getMyBookings = async (req, res) => {
   try {
@@ -425,13 +424,16 @@ export const getMyBookings = async (req, res) => {
       const createdAt = new Date(latestBooking.createdAt);
       const windowStart = new Date(createdAt.getTime() - 45 * 60 * 1000); // 45 mins window
 
-      const cutoffBookings = bookings.slice(1).filter((b) =>
-        b.status !== "Approved" &&
-        b.status !== "Scheduled" &&
-        b.status !== "Completed" &&
-        b.status !== "Replaced" &&
-        new Date(b.createdAt) >= windowStart
-      );
+      const cutoffBookings = bookings
+        .slice(1)
+        .filter(
+          (b) =>
+            b.status !== "Approved" &&
+            b.status !== "Scheduled" &&
+            b.status !== "Completed" &&
+            b.status !== "Replaced" &&
+            new Date(b.createdAt) >= windowStart,
+        );
 
       for (const b of cutoffBookings) {
         if (!b.statusDetails?.message?.includes("User booked another shop")) {
@@ -451,7 +453,7 @@ export const getMyBookings = async (req, res) => {
         seenByUser: false,
         createdAt: { $gte: threeHoursAgo },
       },
-      { $set: { seenByUser: true } }
+      { $set: { seenByUser: true } },
     );
 
     // Step 4: Refetch updated bookings
@@ -472,7 +474,6 @@ export const getMyBookings = async (req, res) => {
   }
 };
 
-
 export const cancelBooking = async (req, res) => {
   const { id } = req.params;
   const booking = await Booking.findById(id);
@@ -483,7 +484,9 @@ export const cancelBooking = async (req, res) => {
   }
 
   if (booking.status !== "Pending") {
-    return res.status(400).json({ message: "Only pending bookings can be cancelled" });
+    return res
+      .status(400)
+      .json({ message: "Only pending bookings can be cancelled" });
   }
 
   await Booking.findByIdAndDelete(id);
@@ -492,10 +495,10 @@ export const cancelBooking = async (req, res) => {
 
 export const getBookingHistory = async (req, res) => {
   try {
-     console.log("userId ",req.user._id)
+    console.log("userId ", req.user._id);
     const now = new Date();
     const threshold = new Date(now.getTime() - 3 * 60 * 60 * 1000); // 3 hours ago
-    console.log("userId ",req.user._id)
+    console.log("userId ", req.user._id);
     const historyBookings = await Booking.find({
       user: req.user._id,
       createdAt: { $lte: threshold },
@@ -510,18 +513,18 @@ export const getBookingHistory = async (req, res) => {
   }
 };
 
-export const getallBooks=async(req,res)=>{
-  try{
+export const getallBooks = async (req, res) => {
+  try {
     res.status(200).json(await Booking.find());
-  }catch(error){
-    res.status(500).json({message:"internal server error","error":error})
+  } catch (error) {
+    res.status(500).json({ message: "internal server error", error: error });
   }
-}
+};
 export const updateUserProfile = async (req, res) => {
   try {
     const { userId } = req.params; // Actually the email address
     const updates = req.body;
-    
+
     // Optional: prevent changing protected fields
     delete updates.email;
     delete updates.role;
@@ -534,16 +537,16 @@ export const updateUserProfile = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ 
-      message: "Profile updated successfully", 
-      user: updatedUser 
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
     });
   } catch (error) {
     console.error("Error updating user:", error);

@@ -138,9 +138,6 @@ export const verifyEmail = async (email, verificationCode) => {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
     });
     console.log("Trying to connect to SMTP...");
 await transporter.verify();

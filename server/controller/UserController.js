@@ -127,6 +127,10 @@ export const emailVerification = async (req, res) => {
 
 export const verifyEmail = async (email, verificationCode) => {
   try {
+
+    console.log("EMAIL:", process.env.EMAIL);
+    console.log("EMAIL_PASSWORD exists:", !!process.env.EMAIL_PASSWORD);
+
     const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,

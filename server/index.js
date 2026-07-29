@@ -95,6 +95,12 @@ app.use("/contact", contactRouter);
 app.use("/admin", adminRouter);
 app.use("/api/shop", shopRouter);
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "QuickFix Auto Backend is running successfully 🚀"
+  });
+});
+
 // 404 Handler
 app.use((req, res) => {
   console.warn("⚠️ Route not found:", req.originalUrl);

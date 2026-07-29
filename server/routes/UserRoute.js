@@ -3,7 +3,6 @@ import {
   cancelBooking,
   changePassword,
   deleteUser,
-  emailVerification,
   findAllUsers,
   findUser,
   forgotPassword,
@@ -17,21 +16,20 @@ import {
   updateUser,
   updateUserProfile,
 } from "../controller/UserController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { protect,admin } from "../middleware/authMiddleware.js";
 const userRouter = express.Router();
 
 userRouter.post("/login", loginUser);
 userRouter.get("/booking/history", protect, getBookingHistory);
-userRouter.get("/booking/allhistory", protect, getallBooks);
+userRouter.get("/booking/allhistory", protect,admin, getallBooks);
 userRouter.get("/bookings/my", protect, getMyBookings);
 userRouter.post("/spam", spamChecker);
 userRouter.post("/", registerUser);
-userRouter.get("/", findAllUsers);
-userRouter.post("/verifyEmail", emailVerification);
+userRouter.get("/", admin, findAllUsers);
 userRouter.put("/logout", protect, logoutUser);
 userRouter.get("/:email", findUser);
-userRouter.put("/:userId", updateUser);
-userRouter.delete("/:userId", deleteUser);
+userRouter.put("/:userId", admin, updateUser);
+userRouter.delete("/:userId", admin, deleteUser);
 userRouter.post("/changePassword", protect, changePassword);
 userRouter.put("/forgotPassword/:email", forgotPassword);
 userRouter.delete("/bookings/:id", protect, cancelBooking);

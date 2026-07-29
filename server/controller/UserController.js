@@ -131,8 +131,9 @@ export const verifyEmail = async (email, verificationCode) => {
     console.log("EMAIL_PASSWORD exists:", !!process.env.EMAIL_PASSWORD);
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
+      requireTLS: true,
       auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,

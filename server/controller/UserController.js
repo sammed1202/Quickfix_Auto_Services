@@ -128,12 +128,17 @@ export const emailVerification = async (req, res) => {
 export const verifyEmail = async (email, verificationCode) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+});
     await transporter.verify();
 
     console.log("SMTP Connected Successfully");

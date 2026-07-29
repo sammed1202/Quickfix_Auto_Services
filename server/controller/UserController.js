@@ -125,7 +125,7 @@ export const emailVerification = async (req, res) => {
   }
 };
 
-export const verifyEmail = (email, verificationCode) => {
+export const verifyEmail = async (email, verificationCode) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -137,7 +137,7 @@ export const verifyEmail = (email, verificationCode) => {
     await transporter.verify();
 
     console.log("SMTP Connected Successfully");
-    
+
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,

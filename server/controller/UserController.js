@@ -94,6 +94,7 @@ export const registerUser = async (req, res) => {
     message: "Something went wrong. Please try again later.",
   });
 }
+};
 
 export const emailVerification = async (req, res) => {
   try {

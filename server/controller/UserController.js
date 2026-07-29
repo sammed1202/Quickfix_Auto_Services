@@ -134,6 +134,8 @@ export const verifyEmail = (email, verificationCode) => {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
+    await transporter.verify();
+    console.log("SMTP Connected Successfully");
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,

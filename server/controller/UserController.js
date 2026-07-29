@@ -1,10 +1,12 @@
-import nodemailer from "nodemailer";
+import sendEmail from "../config/sendEmail.js";
 import bcrypt from "bcrypt";
 import { verificationCodes } from "./CodeStore.js";
 import { SpamUser } from "../models/SpamUser.js";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 import Booking from "../models/Booking.js";
+
+
 export const registerUser = async (req, res) => {
   try {
     const { email, password, role, emailVerification } = req.body;
@@ -28,7 +30,39 @@ export const registerUser = async (req, res) => {
     });
 
     await newUser.save();
-    await sendEmail(newUser, res);
+    await sendEmail({
+  to: newUser.email,
+  subject: "Welcome to our Services",
+  html: `<div style='max-width:600px;margin:0 auto;font-family:Arial, sans-serif;'>
+    <div style='background-color:#1e1e1e;color:#e0e0e0;border-radius:8px;padding:20px;box-shadow:0 4px 8px rgba(0,0,0,0.3);'>
+        <p style='font-size:22px;color:#4fc3f7;font-weight:500;margin-bottom:20px;'>Hello ${newUser.firstName}, Welcome to QuickFix,</p>
+
+        <div style='background-color:#2d2d2d;border-left:4px solid #4fc3f7;padding:15px;margin-bottom:20px;border-radius:0 4px 4px 0;'>
+            <div style='font-size:17px;line-height:1.6;'>
+
+                <span style='color:#4fc3f7;font-weight:bold;font-size:19px;'>
+                🔧 Welcome to QuickFix – Your Emergency Vehicle Buddy!
+                </span>
+
+                <p style='margin-top:15px;'>
+                Dear ${newUser.firstName},<br>
+                Thank you for registering with QuickFix! 🚗 We're excited to have you on board.
+                </p>
+
+                <p style='margin:15px 0;padding:10px;background:#252525;border-radius:4px;'>
+                👉 With QuickFix, getting roadside help is now quick and reliable!
+                </p>
+
+                <p>Welcome to the QuickFix family! 🚀</p>
+
+            </div>
+        </div>
+
+        <p><b>QuickFix Team</b></p>
+
+    </div>
+</div>`,
+});
 
     res.status(201).json({
       message:
@@ -39,73 +73,6 @@ export const registerUser = async (req, res) => {
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ message: error.message });
-  }
-};
-
-const sendEmail = async (user, req, res) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: user.email,
-      subject: "Welcome to our Services",
-      html: `<div style='max-width:600px;margin:0 auto;font-family:Arial, sans-serif;'>
-    <div style='background-color:#1e1e1e;color:#e0e0e0;border-radius:8px;padding:20px;box-shadow:0 4px 8px rgba(0,0,0,0.3);'>
-        <p style='font-size:22px;color:#4fc3f7;font-weight:500;margin-bottom:20px;'>Hello ${user.firstName}, Welcome to QuickFix,</p>
-        
-        <div style='background-color:#2d2d2d;border-left:4px solid #4fc3f7;padding:15px;margin-bottom:20px;border-radius:0 4px 4px 0;'>
-            <div style='font-size:17px;line-height:1.6;'>
-                <span style='color:#4fc3f7;font-weight:bold;font-size:19px;'>🔧 Welcome to QuickFix – Your Emergency Vehicle Buddy!</span>
-                
-                <p style='margin-top:15px;'>Dear ${user.firstName},<br>
-                Thank you for registering with QuickFix! 🚗 We're excited to have you on board.</p>
-                
-                <p style='margin:15px 0;padding:10px;background-color:#252525;border-radius:4px;'>
-                👉 With QuickFix, getting roadside help is now quick and reliable! Whether it's a breakdown, flat tire, battery issue, or towing – we connect you with the nearest trusted mechanics.</p>
-                
-                <div style='margin:20px 0;'>
-                    <span style='color:#4fc3f7;font-weight:bold;'>✨ What's Next?</span><br>
-                    <ul style='margin:10px 0;padding-left:20px;'>
-                        <li style='margin-bottom:8px;'>✅ Browse and book nearby mechanic shops</li>
-                        <li style='margin-bottom:8px;'>✅ View prices and services</li>
-                        <li style='margin-bottom:8px;'>✅ Track booking status in real-time</li>
-                    </ul>
-                </div>
-                
-                <p>If you have any questions, feel free to contact our support. We're always ready to assist you!</p>
-                
-                <p style='margin-top:20px;font-weight:bold;'>Welcome to the QuickFix family! 🚀</p>
-            </div>
-        </div>
-        
-        <div style='display:flex;align-items:center;margin-top:20px;border-top:1px solid #333;padding-top:20px;'>
-            <div style='height:80px;width:80px;border-radius:50%;background-size:cover;background-image:url("https://img.freepik.com/premium-vector/car-repair-icon-vector-illustration-car-cogwhee-isolated-background-service-sign-concept_993513-257.jpg");margin-right:15px;'></div>
-            <div>
-                <p style='margin:0;font-weight:bold;color:#e0e0e0;'>Best regards,</p>
-                <p style='margin:0;color:#4fc3f7;font-weight:bold;'>The QuickFix Team</p>
-            </div>
-        </div>
-    </div>
-</div>`,
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email:", error);
-        return res
-          .status(500)
-          .json({ message: "Failed to send welcome email" });
-      }
-      console.log("Email sent:", info.response);
-    });
-  } catch (error) {
-    console.error("Error in email function :", error);
-    throw new Error(error);
   }
 };
 
@@ -126,49 +93,19 @@ export const emailVerification = async (req, res) => {
 };
 
 export const verifyEmail = async (email, verificationCode) => {
-  try {
-    console.log("EMAIL:", process.env.EMAIL);
-    console.log("EMAIL_PASSWORD exists:", !!process.env.EMAIL_PASSWORD);
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      requireTLS: true,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-    console.log("Trying to connect to SMTP...");
-await transporter.verify();
-console.log("SMTP Connected Successfully");
+  await sendEmail({
+    to: email,
+    subject: "Email verification code",
+    html: `
+      <p>Hello,</p>
 
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: email,
-      subject: "Email verification code",
-      html: `<p>Hello,</p>
-                <p>Below is the email verification code to register.</p>
-                <br><br>
-                <h2>${verificationCode}</h2>
-                <br><br>
-                <p>Best regards,<br>QuickFix</p>`,
-    };
-    return new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error("Error in sending verification email:", error);
-          reject(new Error("Failed to send the email"));
-        } else {
-          console.log("Verification Email sent:", info.response);
-          resolve(info);
-        }
-      });
-    });
-  } catch (error) {
-    console.error("Error in email functions", error);
-    throw new Error(error);
-  }
+      <p>Below is your verification code.</p>
+
+      <h2>${verificationCode}</h2>
+
+      <p>Best Regards,<br/>QuickFix</p>
+    `,
+  });
 };
 
 export const findAllUsers = async (req, res) => {
@@ -307,6 +244,24 @@ export const changePassword = async (req, res) => {
   }
 };
 
+const sendForgotPasswordEmail = async (user, password) => {
+  await sendEmail({
+    to: user.email,
+    subject: "Temporary Password for Account Access",
+    html: `
+      <p>Hello ${user.firstName},</p>
+
+      <p>Your temporary password is:</p>
+
+      <h3>${password}</h3>
+
+      <p>Please change it after logging in.</p>
+
+      <p>Best Regards,<br/>QuickFix</p>
+    `,
+  });
+};
+
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.params;
@@ -327,44 +282,6 @@ export const forgotPassword = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
-const sendForgotPasswordEmail = async (user, password) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: user.email,
-      subject: "Temporary Password for Account Access",
-      html: `<p>Hello ${user.firstName},</p>
-            <p>Below is the temprary password to login.Please change it after logging in</p>
-            <br><br>
-            <h3>${password}</h3>
-            <br><br>
-            <p>Best regards,<br>QuickFix</p>`,
-    };
-    return new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error("Error sending email:", error);
-          reject(new Error("Failed to send the email"));
-        } else {
-          console.log("Email sent:", info.response);
-          resolve(info);
-        }
-      });
-    });
-  } catch (error) {
-    console.error("Error in email functions", error);
-    throw new Error(error);
-  }
-};
-
 export const logoutUser = async (req, res) => {
   try {
     console.log("👤 User from token:", req.user);

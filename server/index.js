@@ -31,7 +31,7 @@ mongoose.connect(URL)
   .then(() => {
     console.log("✅ MongoDB Connected");
     monitorBookingResponses();
-    app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`🚀 🚀🚀 Server running at http://localhost:${PORT}`));
   })
   .catch((err) => {
     console.error("❌ MongoDB Connection Failed:", err);

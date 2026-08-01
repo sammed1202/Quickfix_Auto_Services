@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { Button, Table } from "react-bootstrap";
 import { FaUserAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -25,7 +26,7 @@ const Dashboard = () => {
   const fetchHistory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/user/booking/allhistory",
+        `${API_URL}/user/booking/allhistory`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,7 +55,7 @@ const Dashboard = () => {
       if (!navigator.onLine) {
         setShowOffline(true);
       }
-      const res = await axios.get("http://localhost:8000/user");
+      const res = await axios.get(`${API_URL}/user`);
       console.log("users",res.data);
       setUsers(res.data);
     } catch (error) {
@@ -67,10 +68,10 @@ const Dashboard = () => {
       try {
         console.log(user.email);
         const delres = await axios.delete(
-          `http://localhost:8000/admin/deluser?email=${user.email}`
+          `${API_URL}/admin/deluser?email=${user.email}`
         );
         const spamres = await axios.post(
-          `http://localhost:8000/admin/spam?email=${user.email}`
+          `${API_URL}/admin/spam?email=${user.email}`
         );
         console.log("added to spammer", spamres.status);
         console.log("user delete status", delres.status);
@@ -82,7 +83,7 @@ const Dashboard = () => {
   };
   const fetchUserStats = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/admin/dashboard");
+      const res = await axios.get(`${API_URL}/admin/dashboard`);
       const users = res.data.users;
 
       let totalUsers = 0;

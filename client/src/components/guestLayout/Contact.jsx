@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { Form } from "react-bootstrap";
 import Loader from "../CustomStyles/Loader";
 const Contact = () => {
@@ -31,7 +32,7 @@ const Contact = () => {
     setLoader(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/contact",
+        `${API_URL}/contact`,
         formData
       );
       if (response.status === 200) {

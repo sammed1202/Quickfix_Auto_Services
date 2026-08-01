@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {API_URL} from "../../api";
 import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { useNavigate, NavLink } from "react-router-dom";
@@ -486,7 +487,7 @@ const UserHome = () => {
           setUserCoords({ lat, lng });
 
           const shopRes = await axios.get(
-            `http://localhost:8000/api/shop/nearby?lat=${lat}&lng=${lng}`,
+            `${API_URL}/shop/nearby?lat=${lat}&lng=${lng}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const list = shopRes.data;
@@ -499,7 +500,7 @@ const UserHome = () => {
           await Promise.all(
             list.map(async (shop) => {
               const revRes = await axios.get(
-                `http://localhost:8000/api/shop/review/${shop._id}`,
+                `${API_URL}/shop/review/${shop._id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
               );
               const reviews = revRes.data.reviews || [];
@@ -567,7 +568,7 @@ const UserHome = () => {
         setCurrentShopReviews(shopReviews[shopId]);
       } else {
         const revRes = await axios.get(
-          `http://localhost:8000/api/shop/review/${shopId}`,
+          `${API_URL}/shop/review/${shopId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setCurrentShopReviews(revRes.data);
@@ -674,7 +675,7 @@ const UserHome = () => {
                                         }`}
                                       >
                                         <CarouselImage
-                                          src={`http://localhost:8000/${photo}`}
+                                          src={`${API_URL}/${photo}`}
                                           onError={(e) => {
                                             e.target.src =
                                               "https://via.placeholder.com/300x200?text=No+Image";
@@ -842,7 +843,7 @@ const UserHome = () => {
 
                                 try {
                                   await axios.post(
-                                    `http://localhost:8000/api/shop/${shop._id}/review`,
+                                    `${API_URL}/shop/${shop._id}/review`,
                                     {
                                       rating: sel,
                                       comment: reviewComments[shop._id] || "",
@@ -978,7 +979,7 @@ const UserHome = () => {
                         >
                           {review.user?.profilePicture ? (
                             <img
-                              src={`http://localhost:8000/${review.user.profilePicture}`}
+                              src={`${API_URL}/${review.user.profilePicture}`}
                               alt={review.user.name}
                               style={{
                                 width: "40px",

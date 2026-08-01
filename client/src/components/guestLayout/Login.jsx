@@ -279,6 +279,7 @@ import { FaUser, FaLock, FaEnvelope, FaSignInAlt } from "react-icons/fa";
 import { Button, Col, Container, Form, Row, Alert, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../../api";
 import Loader from "../CustomStyles/Loader";
 import { useAuth } from "../../context/AuthContext";
 
@@ -327,7 +328,7 @@ const Login = () => {
       try {
         setLoader(true);
         const response = await axios.put(
-          `http://localhost:8000/user/forgotPassword/${email}`
+          `${API_URL}/user/forgotPassword/${email}`
         );
         if (response.status === 200) {
           setShowSuccess("Temporary password sent to email");
@@ -357,7 +358,7 @@ const Login = () => {
 
     setLoader(true);
     try {
-      const result = await axios.post("http://localhost:8000/user/login", {
+      const result = await axios.post(`${API_URL}/user/login`, {
         email,
         password,
       });

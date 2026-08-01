@@ -1,4 +1,5 @@
 import axios from "axios";
+import {API_URL} from "../../api";
 import React from "react";
 import { Container, Nav, Navbar, NavbarToggle } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
@@ -7,7 +8,7 @@ const UserNavbar = () => {
   const { token } = useAuth();
   const handleLogout = async () => {
     await axios.put(
-      "http://localhost:8000/user/logout",
+      `${API_URL}/user/logout`,
       {},
       {
         headers: {

@@ -335,6 +335,7 @@ import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
+import {API_URL} from "../../api";
 import { useAuth } from "../../context/AuthContext";
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -583,7 +584,7 @@ const BookPage = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/shop/book",
+        `${API_URL}/shop/book`,
         formData,
         {
           headers: {

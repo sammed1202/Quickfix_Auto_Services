@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { useNavigate } from "react-router-dom";
 import Login from "../guestLayout/Login"
 import BgAnimation from "../CustomStyles/BgAnimation"
@@ -12,7 +13,7 @@ const Feedback = () => {
     fetchFeedbacks();
   }, []);
   const fetchFeedbacks = async () => {
-    const res = await axios.get("http://localhost:8000/contact/feedback");
+    const res = await axios.get(`${API_URL}/contact/feedback`);
     setFeedback(res.data.feedbacks.reverse());
     console.log(feedback);
   };

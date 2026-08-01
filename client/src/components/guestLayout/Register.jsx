@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { Row, Col, Form, Alert, Button, Container, Nav } from "react-bootstrap";
 import { Navigate, NavLink } from "react-router-dom";
 import AOS from "aos";
@@ -44,7 +45,7 @@ const Title = styled.h2`
   margin-bottom: 2rem;
   text-align: center;
   position: relative;
-  
+
   &::after {
     content: "";
     position: absolute;
@@ -100,22 +101,6 @@ const StyledButton = styled(Button)`
     transform: translateY(0);
   }
 `;
-
-const VerifyButton = styled(Button)`
-  background: linear-gradient(90deg, #4b6cb7, #182848);
-  border: none;
-  border-radius: 8px;
-  padding: 12px 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  width: 100%;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(75, 108, 183, 0.4);
-  }
-`;
-
 const ImagePreview = styled(motion.img)`
   max-width: 100px;
   max-height: 100px;
@@ -154,12 +139,11 @@ const Register = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [spammer, setSpammer] = useState();
-  
+
   const [registerData, setRegisterData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    emailVerification: "",
     phoneNumber: "",
     profilePicture: "",
     pincode: "",
@@ -173,7 +157,7 @@ const Register = () => {
     state: "Karnataka",
     country: "India",
     dob: "2000-01-01",
-    maritalStatus: "Single"
+    maritalStatus: "Single",
   });
 
   const handleChange = (e) => {
@@ -182,29 +166,6 @@ const Register = () => {
       ...registerData,
       [name]: value,
     });
-  };
-
-  const handleVerify = async () => {
-    if (registerData.email.includes("@gmail.com")) {
-      setLoader(true);
-      try {
-        const res = await axios.post(`http://localhost:8000/user/verifyEmail`, {
-          email: registerData.email,
-        });
-        const audio = new Audio("/Success_Sound.mp3");
-        audio.currentTime = 1;
-        audio.play();
-        setSuccessMessage("Email Verification Code sent");
-        Navigate("/login");
-      } catch (error) {
-        const audio = new Audio("/Error_Sound.mp3");
-        audio.currentTime = 0.5;
-        audio.play();
-      }
-    } else {
-      alert("Enter valid email to get verification code");
-    }
-    setLoader(false);
   };
 
   const handleFileChange = (event) => {
@@ -234,10 +195,11 @@ const Register = () => {
 
     if (form.checkValidity()) {
       try {
-        const spammer = await axios.post("http://localhost:8000/user/spam", {
+        const spamResponse = await axios.post(`${API_URL}/user/spam`, {
           email: registerData.email,
         });
-        if (spammer) setSpammer(true);
+
+        setSpammer(spamResponse.data.length > 0);
       } catch (error) {
         setError("Error in Spam check");
       }
@@ -251,17 +213,20 @@ const Register = () => {
             const formData = new FormData();
             formData.append("file", image);
             const uploadResponse = await axios.post(
-              "http://localhost:8000/upload",
+              `${API_URL}/upload`,
               formData,
-              { headers: { "Content-type": "multipart/form-data" } }
+              { headers: { "Content-type": "multipart/form-data" } },
             );
             filePath = uploadResponse.data.filePath || "";
           }
 
-          const updateRegisterData = { ...registerData, profilePicture: filePath };
+          const updateRegisterData = {
+            ...registerData,
+            profilePicture: filePath,
+          };
           const registerResponse = await axios.post(
-            "http://localhost:8000/user",
-            updateRegisterData
+            `${API_URL}/user`,
+            updateRegisterData,
           );
 
           if (registerResponse.status === 201) {
@@ -274,7 +239,6 @@ const Register = () => {
               firstName: "",
               lastName: "",
               email: "",
-              emailVerification: "",
               phoneNumber: "",
               profilePicture: "",
               pincode: "",
@@ -288,7 +252,7 @@ const Register = () => {
               state: "Karnataka",
               country: "India",
               dob: "2000-01-01",
-              maritalStatus: "Single"
+              maritalStatus: "Single",
             });
             setImage("");
             setImagePreview(null);
@@ -305,7 +269,10 @@ const Register = () => {
             audio.play();
           }
         } catch (error) {
-          setError(error.response?.data?.message || "Registration failed. Please try again.");
+          setError(
+            error.response?.data?.message ||
+              "Registration failed. Please try again.",
+          );
           const audio = new Audio("/Error_Sound.mp3");
           audio.currentTime = 0.5;
           audio.play();
@@ -331,14 +298,18 @@ const Register = () => {
         style={{ filter: loader ? "blur(2px)" : "none" }}
       >
         <Title>Create Your Account</Title>
-        
+
         {error && (
           <Alert variant="danger" dismissible onClose={() => setError("")}>
             {error}
           </Alert>
         )}
         {successMessage && (
-          <Alert variant="success" dismissible onClose={() => setSuccessMessage("")}>
+          <Alert
+            variant="success"
+            dismissible
+            onClose={() => setSuccessMessage("")}
+          >
             {successMessage}
           </Alert>
         )}
@@ -381,7 +352,7 @@ const Register = () => {
           </Row>
 
           <Row className="mb-4">
-            <Col md={8}>
+            <Col md={12}>
               <Form.Group controlId="email" className="mb-3">
                 <Form.Label>Email Address</Form.Label>
                 <StyledFormControl
@@ -397,32 +368,10 @@ const Register = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col md={4}>
-              <Form.Label>Verification</Form.Label>
-              <VerifyButton onClick={handleVerify} className="mb-3">
-                Get Code
-              </VerifyButton>
-            </Col>
           </Row>
 
           <Row className="mb-4">
-            <Col md={6}>
-              <Form.Group controlId="verificationCode" className="mb-3">
-                <Form.Label>Verification Code</Form.Label>
-                <StyledFormControl
-                  type="number"
-                  placeholder="Enter code"
-                  name="emailVerification"
-                  value={registerData.emailVerification}
-                  onChange={handleChange}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please enter the code
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
+            <Col md={12}>
               <Form.Group controlId="phoneNumber" className="mb-3">
                 <Form.Label>Phone Number</Form.Label>
                 <StyledFormControl
@@ -606,9 +555,9 @@ const Register = () => {
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
           >
-            <img 
-              src="https://i.pinimg.com/originals/3c/48/a1/3c48a142c4f250cbebe25de3fb6d6764.gif" 
-              alt="Loading..." 
+            <img
+              src="https://i.pinimg.com/originals/3c/48/a1/3c48a142c4f250cbebe25de3fb6d6764.gif"
+              alt="Loading..."
               style={{ width: "150px", height: "150px" }}
             />
           </motion.div>

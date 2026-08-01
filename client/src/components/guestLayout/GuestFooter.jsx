@@ -118,7 +118,7 @@ gap: 15px;
                     with <FaHeart /> 
                     by
                     <a
-                      href="http://localhost:3000"
+                      href="/"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Visit Colorlib"

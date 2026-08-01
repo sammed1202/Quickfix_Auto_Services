@@ -321,6 +321,7 @@ Screenshots of project.....
 MERN Stack Developer
 
 * GitHub: https://github.com/sammed1202
+* Email: sammedgane1008@gmail.com
 
 ## 📄 License
 

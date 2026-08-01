@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {API_URL} from "../../api";
 import { useAuth } from "../../context/AuthContext";
 
 const UserBookings = () => {
@@ -9,7 +10,7 @@ const UserBookings = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/user/bookings/my", {
+        const res = await axios.get(`${API_URL}/user/bookings/my`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);

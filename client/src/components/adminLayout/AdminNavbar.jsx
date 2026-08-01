@@ -290,6 +290,7 @@ import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import {API_URL} from "../../api";
 import { useAuth } from "../../context/AuthContext";
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -438,7 +439,7 @@ const AdminNavbar = () => {
 
   const handleLogout = async () => {
     await axios.put(
-      "http://localhost:8000/user/logout",
+      `${API_URL}/user/logout`,
       {},
       {
         headers: {

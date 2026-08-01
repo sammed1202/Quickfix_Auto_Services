@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../../api";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { FaUserAlt } from "react-icons/fa";
@@ -41,7 +42,7 @@ const AllUsers = () => {
       if (!navigator.onLine) {
         setShowOffline(true);
       }
-      const res = await axios.get("http://localhost:8000/user");
+      const res = await axios.get(`${API_URL}/user`);
       console.log(res.data);
       setUsers(res.data);
     } catch (error) {
@@ -49,7 +50,7 @@ const AllUsers = () => {
     }
   };
   const handleImageClick = (imageUrl) => {
-    setSelectedImage(`http://localhost:8000/${imageUrl}`);
+    setSelectedImage(`${API_URL}/${imageUrl}`);
     setShowModal(true);
   };
   const handleCloseModal = () => {
@@ -63,10 +64,10 @@ const AllUsers = () => {
       try {
         console.log(user.email);
         const delres = await axios.delete(
-          `http://localhost:8000/admin/deluser?email=${user.email}`
+          `${API_URL}/admin/deluser?email=${user.email}`
         );
         const spamres = await axios.post(
-          `http://localhost:8000/admin/spam?email=${user.email}`
+          `${API_URL}/admin/spam?email=${user.email}`
         );
         console.log("added to spammer", spamres.status);
         console.log("user delete status", delres.status);
@@ -174,7 +175,7 @@ const AllUsers = () => {
                             cursor: "pointer",
                             objectFit: "cover",
                           }}
-                          src={`http://localhost:8000/${user.profilePicture}`}
+                          src={`${API_URL}/${user.profilePicture}`}
                           alt="Profile"
                           onClick={() => handleImageClick(user.profilePicture)}
                         />

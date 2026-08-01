@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { Button, Table } from "react-bootstrap";
 import BookingMap from "./BookingMap"; // ✅ Make sure this is correctly imported
 
@@ -12,7 +13,7 @@ const ShopOwnerDashboard = () => {
   const [modalImageSrc, setModalImageSrc] = useState("");
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/shop/mybookings", {
+      const res = await axios.get(`${API_URL}/shop/mybookings`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(res.data);
@@ -31,7 +32,7 @@ const ShopOwnerDashboard = () => {
   const handleStatusUpdate = async (bookingId, status, data = {}) => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/shop/booking/${bookingId}/status`,
+        `${API_URL}/shop/booking/${bookingId}/status`,
         { status, ...data },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -139,11 +140,11 @@ const ShopOwnerDashboard = () => {
                       border: "1px solid #ccc",
                       borderRadius: "4px",
                     }}
-                    src={`http://localhost:8000/${booking.user.profilePicture}`}
+                    src={`${API_URL}/${booking.user.profilePicture}`}
                     alt="user profile"
                     onClick={() => {
                       setModalImageSrc(
-                        `http://localhost:8000/${booking.user.profilePicture}`
+                        `${API_URL}/${booking.user.profilePicture}`
                       );
                       setShowImageModal(true);
                     }}
@@ -169,11 +170,11 @@ const ShopOwnerDashboard = () => {
                       border: "1px solid #ccc",
                       borderRadius: "4px",
                     }}
-                    src={`http://localhost:8000${booking.paymentImage}`}
+                    src={`${API_URL}/${booking.paymentImage}`}
                     alt="payment"
                     onClick={() => {
                       setModalImageSrc(
-                        `http://localhost:8000${booking.paymentImage}`
+                        `${API_URL}/${booking.paymentImage}`
                       );
                       setShowImageModal(true);
                     }}

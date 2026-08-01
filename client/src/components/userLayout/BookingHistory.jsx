@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { useAuth } from "../../context/AuthContext";
@@ -155,7 +156,7 @@ const BookingHistory = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/user/booking/history", {
+      const res = await axios.get(`${API_URL}/user/booking/history`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

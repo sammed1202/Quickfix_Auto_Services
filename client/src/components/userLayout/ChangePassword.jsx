@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import axios from "axios";
+import { API_URL } from "../../api";
 import BgAnimation from "../CustomStyles/BgAnimation";
 import Loader from "../CustomStyles/Loader";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +36,7 @@ const ChangePassword = () => {
     try {
       setLoader(true);
       const result = await axios.post(
-        `http://localhost:8000/user/changepassword`,
+        `${API_URL}/user/changepassword`,
         { oldPassword, newPassword, confirmPassword },
         {
           headers: {

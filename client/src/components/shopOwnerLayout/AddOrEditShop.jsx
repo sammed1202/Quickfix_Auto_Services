@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../../api";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { motion } from "framer-motion";
@@ -192,7 +193,7 @@ const AddOrEditShop = () => {
     const fetchShop = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get("http://localhost:8000/api/shop/my", {
+        const res = await axios.get(`${API_URL}/shop/my`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -291,7 +292,7 @@ const AddOrEditShop = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:8000/api/shop",
+        `${API_URL}/shop`,
         formData,
         {
           headers: {

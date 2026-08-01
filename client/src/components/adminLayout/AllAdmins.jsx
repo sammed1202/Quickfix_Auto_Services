@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../../api";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { FaUserAlt } from "react-icons/fa";
@@ -18,7 +19,7 @@ const AllAdmins = () => {
   }, []);
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/user");
+      const res = await axios.get(`${API_URL}/user`);
       console.log(res.data);
       setUsers(res.data);
     } catch (error) {

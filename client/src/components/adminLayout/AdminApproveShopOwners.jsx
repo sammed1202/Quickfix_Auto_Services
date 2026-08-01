@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../../api";
 import { Table, Button, Container, Alert, Modal } from "react-bootstrap";
 
 const AdminApproveShopOwners = () => {
@@ -12,7 +13,7 @@ const AdminApproveShopOwners = () => {
   const fetchPendingShopOwners = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/admin/pending-shopowners");
+      const response = await axios.get(`${API_URL}/admin/pending-shopowners`);
       console.log(response.data)
       setShopOwners(response.data || []);
     } catch (error) {
@@ -24,7 +25,7 @@ const AdminApproveShopOwners = () => {
 
   const handleApprove = async (userId) => {
     try {
-      const response = await axios.put(`http://localhost:8000/admin/approve-shopowner/${userId}`);
+      const response = await axios.put(`${API_URL}/admin/approve-shopowner/${userId}`);
       setMessage(response.data.message);
       console.log(response.data)
       setShopOwners(prev => prev.filter(user => user._id !== userId));
@@ -35,7 +36,7 @@ const AdminApproveShopOwners = () => {
   };
 
   const handleImageClick = (imageUrl) => {
-    setSelectedImage(`http://localhost:8000/${imageUrl}`);
+    setSelectedImage(`${API_URL}/${imageUrl}`);
     setShowModal(true);
   };
 
@@ -79,7 +80,7 @@ const AdminApproveShopOwners = () => {
                       cursor: "pointer",
                       objectFit: "cover"
                     }} 
-                    src={`http://localhost:8000/${owner.profilePicture}`} 
+                    src={`${API_URL}/${owner.profilePicture}`} 
                     alt="Profile" 
                     onClick={() => handleImageClick(owner.profilePicture)}
                   />

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../../api";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,7 +11,7 @@ const Allbookings = () => {
   const fetchHistory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/user/booking/allhistory",
+        `${API_URL}/user/booking/allhistory`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

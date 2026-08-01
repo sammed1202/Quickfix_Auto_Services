@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../api";
 import {
   Button,
   Form,
@@ -43,7 +44,7 @@ const EditProfile = () => {
 
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:8000/user/${user.email}`
+          `${API_URL}/user/${user.email}`
         );
 
         const fetchedUser = response.data;
@@ -63,7 +64,7 @@ const EditProfile = () => {
         });
 
         if (fetchedUser.profilePicture) {
-          setPreview(`http://localhost:8000/${fetchedUser.profilePicture}`);
+          setPreview(`${API_URL}/${fetchedUser.profilePicture}`);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -110,7 +111,7 @@ const EditProfile = () => {
         const formData = new FormData();
         formData.append("file", image);
         const uploadResponse = await axios.post(
-          "http://localhost:8000/upload",
+          `${API_URL}/upload`,
           formData,
           {
             headers: {
@@ -128,7 +129,7 @@ const EditProfile = () => {
       };
 
       await axios.put(
-        `http://localhost:8000/user/profile/${user.email}`,
+        `${API_URL}/user/profile/${user.email}`,
         updateData,
         {
           headers: {

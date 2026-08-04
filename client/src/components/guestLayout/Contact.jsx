@@ -31,10 +31,7 @@ const Contact = () => {
     e.preventDefault();
     setLoader(true);
     try {
-      const response = await axios.post(
-        `${API_URL}/contact`,
-        formData
-      );
+      const response = await axios.post(`${API_URL}/contact`, formData);
       if (response.status === 200) {
         setShowSuccess(true);
         setShowError(false);
@@ -48,7 +45,10 @@ const Contact = () => {
     } catch (error) {
       setShowSuccess(false);
       setShowError(true);
-      console.log("error in saving data,error in try block");
+
+      console.log("Status:", error.response?.status);
+      console.log("Response:", error.response?.data);
+      console.log("Full Error:", error);
     } finally {
       setLoader(false);
     }
@@ -217,8 +217,8 @@ color:white;
             style={{
               background:
                 "linear-gradient(to bottom, rgba(1,1,1, 0.2) 70%, rgba(239, 239, 239, 1) 100%)",
-                borderRadius:"20px",
-                overflow:"hidden"
+              borderRadius: "20px",
+              overflow: "hidden",
             }}
           >
             {/* Video Column */}

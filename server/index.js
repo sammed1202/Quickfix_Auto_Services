@@ -18,10 +18,26 @@ const PORT = process.env.PORT || 7000;
 const URL = process.env.MONGOURL;
 
 // Middleware
-app.use(cors({
-  origin: 'http://localhost:3000',   
-  credentials: true,                
-}));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://quickfix-auto-services-foeq.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (Postman, mobile apps, etc.)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/propertyImages", express.static("propertyImages"));

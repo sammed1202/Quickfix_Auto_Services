@@ -312,7 +312,7 @@ Screenshots of project.....
 
 ## 🌐 Live Demo
 
-**Live Demo:** Add your deployed frontend URL here.
+Live Demo link: https://quickfix-auto-services-foeq.vercel.app/
 
 ## 👨‍💻 Developer
 

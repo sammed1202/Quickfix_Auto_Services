@@ -7,8 +7,6 @@ import { MdEmail } from "react-icons/md";
 import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import Login from "../guestLayout/Login";
-import BgAnimation from "../CustomStyles/BgAnimation";
 const AllAdmins = () => {
   const navigate = useNavigate();
   const email = localStorage.getItem("email");
@@ -19,10 +17,21 @@ const AllAdmins = () => {
   }, []);
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${API_URL}/user`);
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API_URL}/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       console.log(res.data);
-      setUsers(res.data);
+
+      // Backend returns { users: [...] }
+      setUsers(res.data.users);
     } catch (error) {
+      console.log("Status:", error.response?.status);
+      console.log("Response:", error.response?.data);
       console.log(error);
     }
   };
@@ -40,7 +49,7 @@ const AllAdmins = () => {
         }
         `}
       </style>
-        <div>
+      <div>
         <div
           style={{
             margin: "0px",
@@ -50,60 +59,76 @@ const AllAdmins = () => {
         >
           <div style={{ marginTop: "100px" }}>
             <h1 style={{ textAlign: "center" }}>Admins</h1>
-            <div style={{padding:"30px",border:"3px solid grey",borderRadius:"30px"}}>
-            <Table
-              style={{ textAlign: "left", whiteSpace: "nowrap" }}
-              striped
-              bordered
-              hover
-              responsive
+            <div
+              style={{
+                padding: "30px",
+                border: "3px solid grey",
+                borderRadius: "30px",
+              }}
             >
-              <thead>
-                <tr style={{ fontWeight: "500", fontSize: "20px" }}>
-                  <td>
-                    <FaUserAlt /> User
-                  </td>
-                  <td>
-                    <MdEmail /> Email
-                  </td>
-                  <td>
-                    <IoIosCall />
-                    Contact
-                  </td>
-                  <td>
-                    <MdSignalWifiStatusbarConnectedNoInternet4 /> Status
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(
-                  (user, index) =>
-                    user.role === "Admin" && (
-                      <tr key={user._id}>
-                        <td>
-                          {user.firstName} &nbsp;{user.lastName}
-                        </td>
-                        <td>{user.email}</td>
-                        <td>{user.phoneNumber}</td>
-                        {user.userStatus === "Active" && (
-                          <td style={{ background: "rgb(166, 244, 144)" ,textAlign:"center"}}>
-                            Online
+              <Table
+                style={{ textAlign: "left", whiteSpace: "nowrap" }}
+                striped
+                bordered
+                hover
+                responsive
+              >
+                <thead>
+                  <tr style={{ fontWeight: "500", fontSize: "20px" }}>
+                    <td>
+                      <FaUserAlt /> User
+                    </td>
+                    <td>
+                      <MdEmail /> Email
+                    </td>
+                    <td>
+                      <IoIosCall />
+                      Contact
+                    </td>
+                    <td>
+                      <MdSignalWifiStatusbarConnectedNoInternet4 /> Status
+                    </td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(
+                    (user) =>
+                      user.role === "Admin" && (
+                        <tr key={user._id}>
+                          <td>
+                            {user.firstName} {user.lastName}
                           </td>
-                        )}
-                        {user.userStatus === "Inactive" && (
-                          <td style={{ background: "rgb(244, 144, 144)" ,textAlign:"center" }}>
-                            Offline
-                          </td>
-                        )}
-                      </tr>
-                    )
-                )}
-              </tbody>
-            </Table></div>
-          </div>
-        </div></div>
+                          <td>{user.email}</td>
+                          <td>{user.phoneNumber}</td>
 
-     
+                          {user.userStatus === "Active" ? (
+                            <td
+                              style={{
+                                background: "rgb(166, 244, 144)",
+                                textAlign: "center",
+                              }}
+                            >
+                              Online
+                            </td>
+                          ) : (
+                            <td
+                              style={{
+                                background: "rgb(244, 144, 144)",
+                                textAlign: "center",
+                              }}
+                            >
+                              Offline
+                            </td>
+                          )}
+                        </tr>
+                      ),
+                  )}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

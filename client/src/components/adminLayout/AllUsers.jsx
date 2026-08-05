@@ -38,15 +38,27 @@ const AllUsers = () => {
     window.scrollTo(0, 0);
     fetchUsers();
   }, []);
+
   const fetchUsers = async () => {
     try {
       if (!navigator.onLine) {
         setShowOffline(true);
+        return;
       }
-      const res = await axios.get(`${API_URL}/user`);
+
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API_URL}/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       console.log(res.data);
       setUsers(res.data);
     } catch (error) {
+      console.log("Status:", error.response?.status);
+      console.log("Response:", error.response?.data);
       console.log(error);
     }
   };
@@ -64,11 +76,25 @@ const AllUsers = () => {
     if (conf) {
       try {
         console.log(user.email);
+        const token = localStorage.getItem("token");
+
         const delres = await axios.delete(
-          `${API_URL}/admin/deluser?email=${user.email}`
+          `${API_URL}/admin/deluser?email=${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
+
         const spamres = await axios.post(
-          `${API_URL}/admin/spam?email=${user.email}`
+          `${API_URL}/admin/spam?email=${user.email}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
         console.log("added to spammer", spamres.status);
         console.log("user delete status", delres.status);
@@ -219,7 +245,7 @@ const AllUsers = () => {
                         Ban
                       </td>
                     </tr>
-                  )
+                  ),
               )}
             </tbody>
           </Table>

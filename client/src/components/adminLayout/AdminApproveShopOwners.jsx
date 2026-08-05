@@ -13,11 +13,22 @@ const AdminApproveShopOwners = () => {
   const fetchPendingShopOwners = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/admin/pending-shopowners`);
-      console.log(response.data)
+
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(`${API_URL}/admin/pending-shopowners`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data);
+
       setShopOwners(response.data || []);
     } catch (error) {
-      console.error("Error fetching shopowners:", error);
+      console.log("Status:", error.response?.status);
+      console.log("Response:", error.response?.data);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -25,10 +36,20 @@ const AdminApproveShopOwners = () => {
 
   const handleApprove = async (userId) => {
     try {
-      const response = await axios.put(`${API_URL}/admin/approve-shopowner/${userId}`);
+      const token = localStorage.getItem("token");
+
+      const response = await axios.put(
+        `${API_URL}/admin/approve-shopowner/${userId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       setMessage(response.data.message);
-      console.log(response.data)
-      setShopOwners(prev => prev.filter(user => user._id !== userId));
+      console.log(response.data);
+      setShopOwners((prev) => prev.filter((user) => user._id !== userId));
     } catch (error) {
       console.error("Error approving shopowner:", error);
       setMessage("Failed to approve user");
@@ -73,24 +94,29 @@ const AdminApproveShopOwners = () => {
             {shopOwners.map((owner) => (
               <tr key={owner._id}>
                 <td style={{ height: "50px", width: "100px" }}>
-                  <img 
-                    style={{ 
-                      height: "50px", 
+                  <img
+                    style={{
+                      height: "50px",
                       width: "50px",
                       cursor: "pointer",
-                      objectFit: "cover"
-                    }} 
-                    src={`${API_URL}/${owner.profilePicture}`} 
-                    alt="Profile" 
+                      objectFit: "cover",
+                    }}
+                    src={`${API_URL}/${owner.profilePicture}`}
+                    alt="Profile"
                     onClick={() => handleImageClick(owner.profilePicture)}
                   />
                 </td>
-                <td>{owner.firstName} {owner.lastName}</td>
+                <td>
+                  {owner.firstName} {owner.lastName}
+                </td>
                 <td>{owner.email}</td>
                 <td>{owner.phoneNumber || "N/A"}</td>
                 <td>{owner.address || "N/A"}</td>
                 <td>
-                  <Button variant="success" onClick={() => handleApprove(owner._id)}>
+                  <Button
+                    variant="success"
+                    onClick={() => handleApprove(owner._id)}
+                  >
                     ✅ Approve
                   </Button>
                 </td>
@@ -107,14 +133,14 @@ const AdminApproveShopOwners = () => {
         </Modal.Header>
         <Modal.Body className="text-center">
           {selectedImage && (
-            <img 
-              src={selectedImage} 
-              alt="Full Profile" 
-              style={{ 
-                maxWidth: "100%", 
+            <img
+              src={selectedImage}
+              alt="Full Profile"
+              style={{
+                maxWidth: "100%",
                 maxHeight: "70vh",
-                borderRadius: "8px"
-              }} 
+                borderRadius: "8px",
+              }}
             />
           )}
         </Modal.Body>

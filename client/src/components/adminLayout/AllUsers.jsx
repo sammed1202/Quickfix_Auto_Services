@@ -13,6 +13,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { CgProfile } from "react-icons/cg";
 import { Container, Alert, Modal } from "react-bootstrap";
+
 const AllUsers = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);

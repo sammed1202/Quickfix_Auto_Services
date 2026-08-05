@@ -16,6 +16,9 @@ export const protect = async (req, res, next) => {
 
       req.user = await User.findById(decoded.id).select("-password");
 
+      console.log("Logged-in User:", req.user);
+      console.log("Role:", req.user.role);
+
       if (!req.user) {
         return res.status(401).json({
           message: "User not found",

@@ -28,13 +28,14 @@ const AllAdmins = () => {
       console.log(res.data);
 
       // Backend returns { users: [...] }
-      setUsers(res.data.users);
+      setUsers(res.data);
     } catch (error) {
       console.log("Status:", error.response?.status);
       console.log("Response:", error.response?.data);
       console.log(error);
     }
   };
+  console.log("Users State:", users);
   return (
     <>
       <style>
